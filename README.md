@@ -70,11 +70,11 @@ markdown
 
 ## 🎥 关于视频播放与 H.264 支持
 
-默认的 PyQt WebEngine 模块 **不支持 H.264 格式的视频**，这会导致：
-
-- Bilibili、YouTube 等平台的视频播放失败
-- 直播流、嵌入视频也可能加载不了
+Qt 默认的 QWebEngineView  **不支持 HTML5 标签的视频**，会导致Bilibili、YouTube 等平台的视频播放失败，直播流、嵌入视频也可能加载不了等
 
 为了支持这些视频格式，使用了**重新编译过的 Qt WebEngine 动态链接库**（以下文件已替换）：
-Qt5WebEngineCore.dll
-Qt5WebEngineWidgets.dll
+
+- Qt5WebEngineCore.dll
+- Qt5WebEngineWidgets.dll
+
+不过这两个动态库都是x86的，所以发布的是x86版本的，要是有人能编译一个x64的给我就好了（

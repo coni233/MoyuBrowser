@@ -111,6 +111,17 @@ class CustomWebPage(QWebEnginePage):
     def handle_url_change(self, url):
         self.setUrl(url)
 
+    def clear_media_elements(self):
+        script = """
+        (function(){
+            let videos = document.querySelectorAll('video');
+            let audios = document.querySelectorAll('audio');
+            videos.forEach(v => { v.pause(); v.src=''; v.remove(); });
+            audios.forEach(a => { a.pause(); a.src=''; a.remove(); });
+        })();
+        """
+        self.runJavaScript(script)
+
 
 # 资源路径
 def resource_path(relative_path):
@@ -139,7 +150,7 @@ class MiniBrowser(QMainWindow):
         url_layout = QHBoxLayout()
 
         self.pin_button = QPushButton('📌置顶')
-        self.pin_button.setFixedWidth(70)
+        self.pin_button.setFixedWidth(65)
         self.pin_button.clicked.connect(self.toggle_always_on_top)
         url_layout.addWidget(self.pin_button)
 
@@ -233,16 +244,19 @@ class MiniBrowser(QMainWindow):
         self.opacity_value.setText(f'{value}%')
 
     def load_url(self):
+        self.web_view.page().clear_media_elements()  # 清理音轨
         url = self.url_input.text().strip()
         if not url.startswith(('http://', 'https://')):
             url = 'https://' + url
         self.web_view.load(QUrl(url))
 
     def web_view_back(self):
+        self.web_view.page().clear_media_elements()
         if self.web_view.page().history().canGoBack():
             self.web_view.page().history().back()
 
     def web_view_forward(self):
+        self.web_view.page().clear_media_elements()
         if self.web_view.page().history().canGoForward():
             self.web_view.page().history().forward()
 
